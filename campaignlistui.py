@@ -13,8 +13,8 @@ class AdsView:
 
     def build(self):
         title = Container(
-            content=Text("Ad Campaigns", size=20, text_align="center", weight="bold"),
-            padding=padding.only(bottom=10)
+            content=Text("Ad Campaigns", size=20, text_align="center"),
+            padding=padding.only(bottom=10, top=10)
         )
 
         # Group ads by campaign_name
@@ -81,22 +81,7 @@ class AdsView:
         fab = FloatingActionButton(
             icon=Icons.ADD,
             bgcolor="#41721E",
-            on_click=lambda e: self.page.go("/create-ad")  # Update this path as needed
-        )
-
-        bottom_nav = NavigationBar(
-            selected_index=2,
-            bgcolor="#F1EDEC",
-            indicator_color="#41721E",
-            destinations=[
-                NavigationDestination(icon=Icons.SHOW_CHART, label="Home"),
-                NavigationDestination(icon=Icons.SEARCH, label="Search"),
-                NavigationDestination(icon=Icons.ADD_CIRCLE_OUTLINE, bgcolor="#2F4D19", label="Ads"),
-                NavigationDestination(icon=Icons.PERSON, label="Profile"),
-            ],
-            on_change=lambda e: print(f"Nav: {e.control.selected_index}")
-            # on_change=lambda e: self.page.go(["/home", "/search", "/ads", "/profile"][e.control.selected_index])
-
+            on_click=lambda e: self.page.go("/create-ad") 
         )
 
         return View(
@@ -104,7 +89,6 @@ class AdsView:
             [
                 Column([title, campaign_list], expand=True, scroll="auto", horizontal_alignment="center"),
                 fab,
-                bottom_nav
             ],
             vertical_alignment="start",
             horizontal_alignment="center"
@@ -131,21 +115,6 @@ class AdDetailView:
     def build(self):
         if self.ad is None:
             return View("/ads", [Text("Ad not found")])
-
-        bottom_nav = NavigationBar(
-            selected_index=2,
-            bgcolor="#F1EDEC",
-            indicator_color="#41721E",
-            destinations=[
-                NavigationDestination(icon=Icons.SHOW_CHART, label="Home"),
-                NavigationDestination(icon=Icons.SEARCH, label="Search"),
-                NavigationDestination(icon=Icons.ADD_CIRCLE_OUTLINE, bgcolor="#2F4D19", label="Ads"),
-                NavigationDestination(icon=Icons.PERSON, label="Profile"),
-            ],
-            on_change=lambda e: print(f"Nav: {e.control.selected_index}")
-            # on_change=lambda e: self.page.go(["/home", "/search", "/ads", "/profile"][e.control.selected_index])
-
-        )
 
         return View(
             f"/ad/{self.ad_title}",
@@ -203,7 +172,6 @@ class AdDetailView:
                     ], spacing=10),
                     padding=padding.only(top=20)
                 ),
-                bottom_nav
             ],
             vertical_alignment="start",
             horizontal_alignment="center",
@@ -238,21 +206,6 @@ class CreateAdView(View):
             on_click=self.add_ad
         )
 
-        bottom_nav = NavigationBar(
-            selected_index=2,
-            bgcolor="#F1EDEC",
-            indicator_color="#41721E",
-            destinations=[
-                NavigationDestination(icon=Icons.SHOW_CHART, label="Home"),
-                NavigationDestination(icon=Icons.SEARCH, label="Search"),
-                NavigationDestination(icon=Icons.ADD_CIRCLE_OUTLINE, bgcolor="#2F4D19", label="Ads"),
-                NavigationDestination(icon=Icons.PERSON, label="Profile"),
-            ],
-            on_change=lambda e: print(f"Nav: {e.control.selected_index}")
-            # on_change=lambda e: self.page.go(["/home", "/search", "/ads", "/profile"][e.control.selected_index])
-
-        )
-
         form_column = Column([
             Container(
                 content=Text("Fill out the following details:", weight="bold"),
@@ -276,7 +229,6 @@ class CreateAdView(View):
                     leading=IconButton(Icons.ARROW_BACK, on_click=lambda e: page.go("/ads"))
                 ),
                 form_column,
-                bottom_nav
             ],
             floating_action_button=add_button,
             vertical_alignment="start",
@@ -307,7 +259,6 @@ class EditAdView(View):
             super().__init__(route=f"/edit-ad/{ad_title}", controls=[Text("Ad not found.")])
             return
 
-        # Prefill from ad data
         self.ad_name = TextField(label="Name", value=self.ad["title"], width=340)
         self.description = TextField(label="Name of ad", value=self.ad.get("description", ""), width=340)
         
@@ -341,21 +292,6 @@ class EditAdView(View):
             on_click=lambda e: self.page.go(f"/ad/{ad_title}")
         )
 
-        bottom_nav = NavigationBar(
-            selected_index=2,
-            bgcolor="#F1EDEC",
-            indicator_color="#41721E",
-            destinations=[
-                NavigationDestination(icon=Icons.SHOW_CHART, label="Home"),
-                NavigationDestination(icon=Icons.SEARCH, label="Search"),
-                NavigationDestination(icon=Icons.ADD_CIRCLE_OUTLINE, bgcolor="#2F4D19", label="Ads"),
-                NavigationDestination(icon=Icons.PERSON, label="Profile"),
-            ],
-            on_change=lambda e: print(f"Nav: {e.control.selected_index}")
-            # on_change=lambda e: self.page.go(["/home", "/search", "/ads", "/profile"][e.control.selected_index])
-
-        )
-
         form_column = Column([
             self.ad_name,
             self.description,
@@ -374,7 +310,6 @@ class EditAdView(View):
                     leading=IconButton(Icons.ARROW_BACK, on_click=lambda e: page.go(f"/ad/{ad_title}"))
                 ),
                 form_column,
-                bottom_nav
             ],
             vertical_alignment="start",
             horizontal_alignment="center"
@@ -416,7 +351,3 @@ def main(page: Page):
 
     page.on_route_change = route_change
     page.go(page.route or "/")
-
-
-if __name__ == "__main__":
-    ft.app(target=main)
